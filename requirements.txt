@@ -1,0 +1,31 @@
+# Data collection
+requests
+python-dotenv
+
+# Data manipulation
+pandas
+numpy
+
+# Data visualization
+matplotlib
+seaborn
+plotly
+
+# Statistics and time series
+statsmodels
+scipy
+
+# Machine learning
+scikit-learn
+xgboost
+prophet
+
+# Database
+sqlalchemy
+
+# Notebook environment
+jupyter
+ipykernel
+
+# Dashboard
+streamlit
