@@ -33,3 +33,4 @@ models/*
 
 # IDE
 .vscode/
+ecommerce_demand.db
