@@ -1,8 +1,8 @@
 # E-commerce Demand Intelligence & Inventory Optimization Platform
 
-An end-to-end Data Science and Business Intelligence project focused on historical retail demand analysis, time-series forecasting, model evaluation, and inventory replenishment recommendations.
+An end-to-end Data Science and Business Intelligence project focused on historical retail demand analysis, time-series forecasting, model evaluation, inventory optimization, and API development.
 
-The project uses the **Walmart M5 Forecasting dataset** to explore retail sales patterns, build forecasting models, and translate analytical results into business insights through an interactive Power BI dashboard.
+The project uses the **Walmart M5 Forecasting dataset** to explore retail sales patterns, build forecasting models, generate product-store-level replenishment recommendations, and translate analytical results into business insights through Power BI and a FastAPI backend.
 
 ## Project Objectives
 
@@ -11,18 +11,23 @@ The project uses the **Walmart M5 Forecasting dataset** to explore retail sales 
 - Perform statistical time-series analysis.
 - Build and evaluate 90-day aggregate demand forecasts.
 - Compare statistical and machine learning forecasting models.
-- Generate product-store-level inventory and replenishment recommendations using simulated inventory assumptions.
-- Develop an interactive Power BI dashboard for business insights.
+- Generate product-store-level inventory recommendations using simulated inventory assumptions.
+- Develop an interactive Power BI dashboard.
+- Build REST API endpoints using FastAPI.
+- Perform SQL-based business analysis.
 
 ## Technology Stack
 
 - **Programming:** Python
 - **Data Analysis:** Pandas, NumPy
-- **Visualization:** Matplotlib, Seaborn
+- **Visualization:** Matplotlib, Seaborn, Plotly
 - **Time-Series Analysis:** Statsmodels
 - **Forecasting Models:** ARIMA, SARIMA, Prophet, XGBoost
 - **Business Intelligence:** Power BI
-- **Additional Tools:** SQL, Git, GitHub
+- **Backend Development:** FastAPI, Uvicorn
+- **Database:** SQLite, SQL
+- **Testing:** Pytest, HTTPX
+- **Development Tools:** Jupyter Notebook, Git, GitHub
 
 ## Project Structure
 
@@ -34,23 +39,38 @@ ecommerce-demand-intelligence/
 │   └── processed/
 │
 ├── notebooks/
-│   ├── 01_data_collection_and_understanding.ipynb
+│   ├── 01_data_collection.ipynb
 │   ├── 02_data_cleaning.ipynb
-│   ├── 03_exploratory_data_analysis.ipynb
+│   ├── 03_exploratory_analysis.ipynb
 │   ├── 04_time_series_analysis.ipynb
 │   ├── 05_stationarity_and_decomposition.ipynb
 │   ├── 06_arima_sarima.ipynb
 │   ├── 07_prophet_forecasting.ipynb
 │   ├── 08_xgboost_forecasting.ipynb
-│   ├── 09_model_comparison.ipynb
+│   ├── 09_model_comaprison.ipynb
 │   └── 10_inventory_optimization.ipynb
 │
 ├── src/
+│   ├── main.py
+│   ├── data_collection.py
+│   ├── feature_engineering.py
+│   ├── forecasting.py
+│   ├── preprocessing.py
+│   ├── inventry_optimizer.py
+│   └── load_sql_database.py
+│
 ├── sql/
+│   ├── analysis.sql
+│   └── schema.sql
+│
 ├── dashboard/
+│   ├── E-commerce project report.pbix
+│   └── E-commerce project.pdf
+│
 ├── models/
 ├── reports/
 ├── tests/
+│   └── test_api.py
 │
 ├── requirements.txt
 ├── .gitignore
@@ -70,6 +90,8 @@ Models were evaluated on a 90-day test period using MAE, RMSE, and WMAPE.
 | ARIMA | 5,712.29 | 7,816.71 | 13.65% |
 
 **Best-performing model: XGBoost**, based on the lowest WMAPE on the evaluated test period.
+
+The forecasting model predicts aggregate daily sales rather than individual product or store demand.
 
 ## Inventory Optimization
 
@@ -93,63 +115,79 @@ Key components:
 
 Inventory levels and lead-time assumptions are simulated because the original dataset does not provide actual on-hand inventory or supplier lead times.
 
-## Power BI Dashboard
+## SQL Analytics
 
-The interactive Power BI report contains four pages:
+SQLite was used to store and query the processed project datasets.
 
-### 1. Executive Overview
+The database contains five analytical tables:
 
-![Executive Overview](reports/executive_overview.png)
+- `calendar`
+- `xgboost_forecast`
+- `model_comparison`
+- `inventory_recommendations`
+- `price_demand_analysis`
 
-### 2. Demand Forecasting
+SQL queries were developed to analyse:
 
-![Demand Forecasting](reports/demand_forecasting.png)
+- Inventory and replenishment summaries
+- Model performance rankings
+- Category-wise replenishment requirements
+- Store-wise inventory status
+- Top products requiring replenishment
+- Monthly actual sales
+- Price-band demand patterns
+- Forecast accuracy
 
-### 3. Inventory Intelligence
+## FastAPI Application
 
-![Inventory Intelligence](reports/inventory_intelligence.png)
+A REST API was developed using **FastAPI** to expose the project's forecasting, inventory, and business analytics results.
 
-### 4. Business Insights
+### Available Endpoints
 
-![Business Insights](reports/business_insights.png)
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | API welcome message |
+| GET | `/health` | Health check |
+| GET | `/api/overview` | Overall project metrics |
+| GET | `/api/forecast` | 90-day actual vs forecast data |
+| GET | `/api/inventory` | Category-wise and store-wise inventory summaries |
+| GET | `/api/replenishment` | Paginated replenishment records with filters |
+| GET | `/api/business-insights` | Price-demand insights and forecast accuracy |
 
-## Key Insights
+The replenishment endpoint supports:
 
-- XGBoost achieved the best forecasting performance among the evaluated models.
-- Weekly seasonality plays an important role in historical retail demand.
-- FOODS contributed the largest share of historical unit sales.
-- Lower price bands showed higher average weekly demand in the descriptive price-band analysis.
-- Inventory recommendations highlight replenishment requirements across product-store combinations.
+- Pagination using `limit` and `offset`
+- Category filtering
+- Store filtering
+- Replenishment status filtering
 
-## Data Source
+### Running the API Locally
 
-**Primary Dataset:** Walmart M5 Forecasting Dataset.
+1. Clone the repository:
 
-The analysis uses historical retail sales, calendar information, and related dataset files.
+```bash
+git clone https://github.com/vandanachauhan4197-creator/Ecommerce-demand-intelligence.git
+cd Ecommerce-demand-intelligence
+```
 
-## Limitations
+2. Install dependencies:
 
-- Forecasting is performed at an aggregate daily sales level, not at individual product or store level.
-- Inventory recommendations are based on simulated stock levels and assumed lead times.
-- The price-demand analysis is descriptive and does not establish a causal relationship.
-- Forecast performance reflects the selected historical test period and may differ on future data.
+```bash
+pip install -r requirements.txt
+```
 
-## Project Status
+3. Ensure the processed CSV files are available in `data/processed/`.
 
-**Completed:**
-- Data collection and cleaning
-- Exploratory data analysis
-- Time-series analysis and decomposition
-- ARIMA, SARIMA, Prophet and XGBoost modelling
-- Model comparison and selection
-- Inventory optimization analysis
-- Four-page Power BI dashboard
+4. Create the SQLite database:
 
-**Further development:**
-- SQL-based business analysis
-- Streamlit dashboard
-- Reproducible deployment and documentation
+```bash
+python src/load_sql_database.py
+```
 
----
+5. Start the FastAPI server:
 
-*Built as an end-to-end retail analytics project combining Data Science, forecasting, inventory intelligence, and business reporting.*
+```bash
+uvicorn src.main:app --reload
+```
+
+6. Open the interactive

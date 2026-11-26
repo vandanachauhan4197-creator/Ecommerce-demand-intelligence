@@ -34,3 +34,10 @@ models/*
 # IDE
 .vscode/
 ecommerce_demand.db
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local databases
+*.db

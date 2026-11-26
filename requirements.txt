@@ -1,3 +1,4 @@
+
 # Data collection
 requests
 python-dotenv
@@ -23,9 +24,14 @@ prophet
 # Database
 sqlalchemy
 
+# API
+fastapi
+uvicorn
+
+# Testing
+pytest
+httpx
+
 # Notebook environment
 jupyter
 ipykernel
-
-# Dashboard
-streamlit
